@@ -43,15 +43,16 @@ public class SettingFragment extends BaseFragment {
     private boolean mHasOpenDocuments = false;
 
     private ActivityResultLauncher<String> openDocumentedResult =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onVideoChoiseDone);
+            registerForActivityResult(new ActivityResultContracts.GetContent(), this::onMediaChoiseDone);
 
-    public void onVideoChoiseDone(Uri video) {
-        if (video == null) {
+    public void onMediaChoiseDone(Uri mediaUri) {
+        if (mediaUri == null) {
+            // User cancelled the picker
         } else {
-            mInput.setText(video.toString());
-            mHasOpenDocuments = true;
+            mInput.setText(mediaUri.toString());
+            mHasOpenDocuments = true; // Indicate that a new document has been chosen
         }
-        LogUtil.log("onVideoChoiseDone:" + video);
+        LogUtil.log("onMediaChoiseDone URI:" + mediaUri);
     }
 
     @Nullable
@@ -72,7 +73,11 @@ public class SettingFragment extends BaseFragment {
         mAudioSwitch = rootView.findViewById(R.id.protect_audio_switch);
         mChoiseVideo = rootView.findViewById(R.id.protect_video_select);
         mChoiseVideo.setOnClickListener(v -> {
-            openDocumentedResult.launch("video/*");
+            if (mMethodType == MethodType.TYPE_LOCAL_PHOTO || mMethodType == MethodType.TYPE_FACE_SWAP) { // Added TYPE_FACE_SWAP
+                openDocumentedResult.launch("image/*");
+            } else { // Default to video for TYPE_LOCAL_VIDEO
+                openDocumentedResult.launch("video/*");
+            }
         });
 
         mProtectMethodBtn.setOnClickListener(new View.OnClickListener() {
@@ -83,16 +88,17 @@ public class SettingFragment extends BaseFragment {
                 mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.protect_method_disable_camera:
-                                onMethodTypeClick(MethodType.TYPE_DISABLE_CAMERA);
-                                break;
-                            case R.id.protect_method_local:
-                                onMethodTypeClick(MethodType.TYPE_LOCAL_VIDEO);
-                                break;
-                            case R.id.protect_method_network:
-                                onMethodTypeClick(MethodType.TYPE_NETWORK_VIDEO);
-                                break;
+                        int itemId = item.getItemId();
+                        if (itemId == R.id.protect_method_disable_camera) {
+                            onMethodTypeClick(MethodType.TYPE_DISABLE_CAMERA);
+                        } else if (itemId == R.id.protect_method_local) {
+                            onMethodTypeClick(MethodType.TYPE_LOCAL_VIDEO);
+                        } else if (itemId == R.id.protect_method_network) {
+                            onMethodTypeClick(MethodType.TYPE_NETWORK_VIDEO);
+                        } else if (itemId == R.id.protect_method_photo) {
+                            onMethodTypeClick(MethodType.TYPE_LOCAL_PHOTO);
+                        } else if (itemId == R.id.protect_method_face_swap) { // Added
+                            onMethodTypeClick(MethodType.TYPE_FACE_SWAP);
                         }
                         return true;
                     }
@@ -200,6 +206,24 @@ public class SettingFragment extends BaseFragment {
                 }
                 mAudioSwitch.setChecked(MultiPreferences.getInstance().getBoolean("video_path_local_audio_enable", true));
                 break;
+            case MethodType.TYPE_LOCAL_PHOTO:
+                mProtectMethodText.setText(R.string.protect_method_photo);
+                mTip.setText(R.string.protect_tip_photo);
+                mInput.setVisibility(View.VISIBLE);
+                mChoiseVideo.setVisibility(View.VISIBLE);
+                mChoiseVideo.setEnabled(true);
+                mChoiseVideo.setText(R.string.choose_photo);
+                mAudioText.setVisibility(View.GONE);
+                mAudioSwitch.setVisibility(View.GONE);
+                mInput.setHint(""); // Or "Selected photo URI"
+                mInput.setEnabled(false);
+                if (mHasOpenDocuments) { // If a new document was chosen, it's already in mInput
+                    // Potentially load from MultiPreferences if not mHasOpenDocuments and a photo was previously saved
+                    // mInput.setText(MultiPreferences.getInstance().getString("photo_path_uri", ""));
+                } else {
+                     mInput.setText(MultiPreferences.getInstance().getString("photo_path_uri", ""));
+                }
+                break;
             case MethodType.TYPE_NETWORK_VIDEO:
                 mProtectMethodText.setText(R.string.protect_method_network);
                 mTip.setText(R.string.protect_tip_network);
@@ -212,11 +236,28 @@ public class SettingFragment extends BaseFragment {
                 mInput.setText(MultiPreferences.getInstance().getString("video_path_network", ""));
                 mAudioSwitch.setChecked(MultiPreferences.getInstance().getBoolean("video_path_network_audio_enable", true));
                 break;
+            case MethodType.TYPE_FACE_SWAP: // Added
+                mProtectMethodText.setText(R.string.protect_method_face_swap);
+                mTip.setText(R.string.protect_tip_face_swap);
+                mInput.setVisibility(View.VISIBLE);
+                mChoiseVideo.setVisibility(View.VISIBLE);
+                mChoiseVideo.setEnabled(true);
+                mChoiseVideo.setText(R.string.choose_face_swap_photo);
+                mAudioText.setVisibility(View.GONE);
+                mAudioSwitch.setVisibility(View.GONE);
+                mInput.setHint(""); // Or "Selected source photo for face swap"
+                mInput.setEnabled(false);
+                if (mHasOpenDocuments) {
+                    // URI is already in mInput from onMediaChoiseDone
+                } else {
+                     mInput.setText(MultiPreferences.getInstance().getString("face_swap_source_photo_uri", ""));
+                }
+                break;
         }
     }
 
     private void saveSettings() {
-        AppUtil.killAllApps();
+        AppUtil.killAllApps(); // Consider if this is always needed, especially for just changing a photo URI
         switch (mMethodType) {
             case MethodType.TYPE_DISABLE_CAMERA:
                 MultiPreferences.getInstance().setInt("method_type", mMethodType);
@@ -262,6 +303,36 @@ public class SettingFragment extends BaseFragment {
                 MultiPreferences.getInstance().setBoolean("video_path_network_audio_enable", mAudioSwitch.isChecked());
                 ToastUtils.showToast("Save Success...");
                 break;
+            case MethodType.TYPE_LOCAL_PHOTO:
+                if (TextUtils.isEmpty(mInput.getText())) {
+                    ToastUtils.showToast(getString(R.string.photo_not_set));
+                    return;
+                }
+                handleLocalImage(mInput.getText().toString());
+                break;
+            case MethodType.TYPE_FACE_SWAP: // Added
+                if (TextUtils.isEmpty(mInput.getText())) {
+                    ToastUtils.showToast(getString(R.string.face_swap_photo_not_set));
+                    return;
+                }
+                handleFaceSwapSourcePhoto(mInput.getText().toString());
+                break;
         }
+    }
+
+    private void handleLocalImage(String imageUriString) {
+        LogUtil.log("handleLocalImage URI: " + imageUriString);
+        MultiPreferences.getInstance().setInt("method_type", mMethodType);
+        MultiPreferences.getInstance().setString("photo_path_uri", imageUriString);
+        ToastUtils.showToast(getString(R.string.photo_settings_saved));
+        mHasOpenDocuments = false;
+    }
+
+    private void handleFaceSwapSourcePhoto(String imageUriString) { // Added
+        LogUtil.log("handleFaceSwapSourcePhoto URI: " + imageUriString);
+        MultiPreferences.getInstance().setInt("method_type", mMethodType); // mMethodType should be TYPE_FACE_SWAP
+        MultiPreferences.getInstance().setString("face_swap_source_photo_uri", imageUriString);
+        ToastUtils.showToast(getString(R.string.face_swap_photo_saved));
+        mHasOpenDocuments = false; // Reset flag after saving
     }
 }

@@ -105,4 +105,21 @@ dependencies {
 
     implementation project(':opensdk')
     implementation 'virtual.camera.camera:camera:1.0.0'
+
+    // ML Kit Face Detection
+    implementation 'com.google.mlkit:face-detection:16.1.7' // Consider using the latest version
+
+    // CameraX dependencies (use a recent stable version)
+    def camerax_version = "1.2.3" // Example version, update as needed
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation "androidx.camera:camera-view:${camerax_version}"
+    implementation "androidx.camera:camera-extensions:${camerax_version}"
+
+    // OpenCV (Illustrative - replace with actual OpenCV Android SDK integration)
+    // For example, if using a prebuilt AAR or a community library:
+    // implementation 'org.opencv:opencv-android:4.5.5' // Example for official OpenCV, if available on Maven
+    // Or if you've added OpenCV as a local module:
+    // implementation project(path: ':opencv') // Ensure you have an opencv module
 }
