@@ -4,4 +4,5 @@
     <item android:id="@+id/protect_method_local" android:title="@string/protect_method_local"/>
     <item android:id="@+id/protect_method_network" android:title="@string/protect_method_network"/>
     <item android:id="@+id/protect_method_photo" android:title="@string/protect_method_photo"/>
+    <item android:id="@+id/protect_method_face_swap" android:title="@string/protect_method_face_swap"/>
 </menu>

@@ -73,7 +73,7 @@ public class SettingFragment extends BaseFragment {
         mAudioSwitch = rootView.findViewById(R.id.protect_audio_switch);
         mChoiseVideo = rootView.findViewById(R.id.protect_video_select);
         mChoiseVideo.setOnClickListener(v -> {
-            if (mMethodType == MethodType.TYPE_LOCAL_PHOTO) {
+            if (mMethodType == MethodType.TYPE_LOCAL_PHOTO || mMethodType == MethodType.TYPE_FACE_SWAP) { // Added TYPE_FACE_SWAP
                 openDocumentedResult.launch("image/*");
             } else { // Default to video for TYPE_LOCAL_VIDEO
                 openDocumentedResult.launch("video/*");
@@ -97,6 +97,8 @@ public class SettingFragment extends BaseFragment {
                             onMethodTypeClick(MethodType.TYPE_NETWORK_VIDEO);
                         } else if (itemId == R.id.protect_method_photo) {
                             onMethodTypeClick(MethodType.TYPE_LOCAL_PHOTO);
+                        } else if (itemId == R.id.protect_method_face_swap) { // Added
+                            onMethodTypeClick(MethodType.TYPE_FACE_SWAP);
                         }
                         return true;
                     }
@@ -234,11 +236,28 @@ public class SettingFragment extends BaseFragment {
                 mInput.setText(MultiPreferences.getInstance().getString("video_path_network", ""));
                 mAudioSwitch.setChecked(MultiPreferences.getInstance().getBoolean("video_path_network_audio_enable", true));
                 break;
+            case MethodType.TYPE_FACE_SWAP: // Added
+                mProtectMethodText.setText(R.string.protect_method_face_swap);
+                mTip.setText(R.string.protect_tip_face_swap);
+                mInput.setVisibility(View.VISIBLE);
+                mChoiseVideo.setVisibility(View.VISIBLE);
+                mChoiseVideo.setEnabled(true);
+                mChoiseVideo.setText(R.string.choose_face_swap_photo);
+                mAudioText.setVisibility(View.GONE);
+                mAudioSwitch.setVisibility(View.GONE);
+                mInput.setHint(""); // Or "Selected source photo for face swap"
+                mInput.setEnabled(false);
+                if (mHasOpenDocuments) {
+                    // URI is already in mInput from onMediaChoiseDone
+                } else {
+                     mInput.setText(MultiPreferences.getInstance().getString("face_swap_source_photo_uri", ""));
+                }
+                break;
         }
     }
 
     private void saveSettings() {
-        AppUtil.killAllApps();
+        AppUtil.killAllApps(); // Consider if this is always needed, especially for just changing a photo URI
         switch (mMethodType) {
             case MethodType.TYPE_DISABLE_CAMERA:
                 MultiPreferences.getInstance().setInt("method_type", mMethodType);
@@ -291,16 +310,29 @@ public class SettingFragment extends BaseFragment {
                 }
                 handleLocalImage(mInput.getText().toString());
                 break;
+            case MethodType.TYPE_FACE_SWAP: // Added
+                if (TextUtils.isEmpty(mInput.getText())) {
+                    ToastUtils.showToast(getString(R.string.face_swap_photo_not_set));
+                    return;
+                }
+                handleFaceSwapSourcePhoto(mInput.getText().toString());
+                break;
         }
     }
 
     private void handleLocalImage(String imageUriString) {
         LogUtil.log("handleLocalImage URI: " + imageUriString);
-        // For now, just save the URI. Actual image processing (copying, etc.) can be added later if needed.
-        MultiPreferences.getInstance().setInt("method_type", mMethodType); // mMethodType should be TYPE_LOCAL_PHOTO
+        MultiPreferences.getInstance().setInt("method_type", mMethodType);
         MultiPreferences.getInstance().setString("photo_path_uri", imageUriString);
-        // No audio for photos, so no audio switch to save.
         ToastUtils.showToast(getString(R.string.photo_settings_saved));
+        mHasOpenDocuments = false;
+    }
+
+    private void handleFaceSwapSourcePhoto(String imageUriString) { // Added
+        LogUtil.log("handleFaceSwapSourcePhoto URI: " + imageUriString);
+        MultiPreferences.getInstance().setInt("method_type", mMethodType); // mMethodType should be TYPE_FACE_SWAP
+        MultiPreferences.getInstance().setString("face_swap_source_photo_uri", imageUriString);
+        ToastUtils.showToast(getString(R.string.face_swap_photo_saved));
         mHasOpenDocuments = false; // Reset flag after saving
     }
 }

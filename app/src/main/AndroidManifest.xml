@@ -117,15 +117,25 @@
         <activity android:name="virtual.camera.app.view.setting.SettingActivity" android:exported="false"/>
         <activity android:name="virtual.camera.app.view.gms.GmsManagerActivity" android:exported="false"/>
         <activity
+            android:name="virtual.camera.app.view.poc.FaceSwapPocActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="virtual.camera.app.view.main.WelcomeActivity"
             android:launchMode="singleTop"
             android:exported="true"
             android:theme="@style/WelcomeTheme">
+            <!-- Remove launcher intent filter temporarily for PoC -->
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
         <activity android:name="virtual.camera.app.view.list.ListActivity" android:exported="false"/>
 

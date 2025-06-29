@@ -5,4 +5,5 @@ public class MethodType {
     public static final int TYPE_LOCAL_VIDEO = 2;
     public static final int TYPE_NETWORK_VIDEO = 3;
     public static final int TYPE_LOCAL_PHOTO = 4;
+    public static final int TYPE_FACE_SWAP = 5; // Added
 }
