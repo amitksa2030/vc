@@ -71,12 +71,17 @@
     <string name="protect_method_disable_camera">1. Disable</string>
     <string name="protect_method_local">2. Use Local Video</string>
     <string name="protect_method_network">3. Use Network Video Stream</string>
+    <string name="protect_method_photo">4. Use Local Photo</string>
     <string name="protect_tip_none">Tips: Please choose a protection method.</string>
     <string name="protect_tip_disable">Tips: This will disable the virtual camera.</string>
     <string name="protect_tip_local">Tips: This will replace the camera data with a local video.</string>
+    <string name="protect_tip_photo">Tips: This will replace the camera data with a local photo.</string>
     <string name="protect_tip_network">Tips: This will replace the camera data with a network video.</string>
     <string name="protect_path_hint">Input video url</string>
     <string name="save">Save</string>
+    <string name="choose_photo">Choose Local Photo</string>
+    <string name="photo_settings_saved">Photo settings saved!</string>
+    <string name="photo_not_set">Photo not set...</string>
     <string name="choise_video">Choose Local Video</string>
     <string name="killApps">Kill All Apps</string>
     <string name="open_source">Github</string>
