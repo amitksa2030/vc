@@ -1,4 +1,11 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 include ':app'
-include ':opensdk'
 
 rootProject.name = "VCamera"

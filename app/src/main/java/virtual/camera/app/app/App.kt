@@ -3,7 +3,6 @@ package virtual.camera.app.app
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import com.hack.opensdk.HackApplication
 
 /**
  *
@@ -11,7 +10,7 @@ import com.hack.opensdk.HackApplication
  * @Author: wukaicheng
  * @CreateDate: 2021/4/29 21:21
  */
-class App : HackApplication() {
+class App : Application() {
 
     companion object {
 
