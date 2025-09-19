@@ -1,48 +1,64 @@
-# VCamera
+# VCamera - Virtual Camera App (2025–2027 Roadmap)
 
-This is a powerful app that allows you to replace the camera with the video you specify.  </b>  
- It can be used as a live broadcast assistant, such as using local movies as live broadcast content. </b>    
- It can also be used to prevent APP sneak shots. </b>    
+![Android](https://img.shields.io/badge/Android-34A853?style=for-the-badge&logo=android&logoColor=white)
+![Java/Kotlin](https://img.shields.io/badge/Java%2Fkotlin-000000?style=for-the-badge&logo=java&logoColor=white)
+![CameraX](https://img.shields.io/badge/CameraX-FF0000?style=for-the-badge&logo=google&logoColor=white)
+![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
 
-# Scenes to be used:
-1. Protect the privacy of the camera and prevent some apps from maliciously taking pictures.  
-2. Live Assistant. Similar to OBS, but may be better than OBS, can be used for Twitch, Youtube, Facebook, etc.  
-3. Entertainment among friends. How fun it would be to record a hilarious video to prank your friends. 
+> A lightweight, open-source virtual camera app for Android, designed to empower developers and streamers with real-time video effects, filters, and device simulation.
 
-**Notice:**  
-**Please strictly abide by the laws and regulations. It is strictly forbidden to use this APP for any illegal activities, otherwise you will bear the consequences.**  
+---
 
+## 🌟 Overview
 
-# QA:
-**If you are the owner of an APP,How to detect if you don’t want your APP to run in VCamera?**  
-VCamera is based on a virtual machine, so you can detect whether it is currently running in a virtual machine environment.  
-[Check Env Demo Code](https://github.com/andvipgroup/VCamera/tree/main/check_env_demo/code)  
-[Check Env Demo Apk](https://github.com/andvipgroup/VCamera/blob/main/check_env_demo/check_env_demo.apk)  <br><br>
-![Check Env Demo Apk Screenshot](https://github.com/andvipgroup/VCamera/blob/main/check_env_demo/check_result.png?raw=true)  
-Here "isPathReallyExist  < 0" means it running in a virtual machine.  
-If "isPathReallyExist = 0" means it running in a real device.  
+**VCamera** allows users to use their smartphone as a virtual webcam for streaming, video calls, and content creation. Built with **Android CameraX**, it ensures high performance, low latency, and compatibility across devices.
 
+This project is actively being developed with a long-term roadmap from **2025 to 2027**.
 
+---
 
-# Demo Video
-[![Watch the video](https://img.youtube.com/vi/lT-MP9c7SbY/maxresdefault.jpg)](https://www.youtube.com/embed/lT-MP9c7SbY)
+## 🗓️ Roadmap: 2025 – 2027
 
+| Year | Milestone | Status |
+|------|----------|--------|
+| **2025 Q1–Q2** | ✅ Launch stable APK with basic camera preview & photo capture | Done |
+| **2025 Q3–Q4** | 🔧 Add front/back camera switch, flash toggle, and image filters | In Progress |
+| **2026 Q1** | 🎨 Integrate AR overlays and face tracking (via ML Kit) | Planned |
+| **2026 Q2** | 📺 Enable screen recording mode (with permission) | Planned |
+| **2026 Q3** | 🌐 Support WebRTC streaming to PC via local network | Planned |
+| **2026 Q4** | 📱 Add multi-camera support (e.g., dual rear cameras) | Planned |
+| **2027 Q1** | 🤖 AI-powered background blur and object detection | Planned |
+| **2027 Q2** | 🌍 Cross-platform release (iOS + Windows via Flutter) | Vision |
+| **2027 Q3** | 🛠️ Open API for third-party plugins (e.g., custom filters) | Vision |
 
-# Key Features
-**1. Support replacing the camera with a photo.**  
-**2. Support replacing the camera with video.**  
-**3. Support to replace the camera with network video.**  
-**4. Support resizing video, rotating, moving, zooming, flipping, etc.**  
+---
 
+## 📱 Features (Current)
 
+✅ Live camera preview  
+✅ Tap-to-capture photos  
+✅ Save images to gallery  
+✅ Real-time preview with minimal lag  
+✅ Permission handling (camera access)  
+✅ Built using **CameraX** (Google's recommended library)
 
-# Contact Me
-andvipgroup@gmail.com
+---
 
-# APK Download
-**Latest version : 3.5.4**  
-<p align="left">
-  <a href='https://play.google.com/store/apps/details?id=virtual.camera.app'>
-    <img alt='Get it on Google Play' height='90' src='https://github.com/andvipgroup/VCamera/blob/main/gp.png'/>
-  </a>
-</p>
+## 🛠️ How to Use
+
+1. Download the latest APK from [Releases](https://github.com/andvipgroup/VCamera/releases)
+2. Install on your Android device
+3. Grant camera permissions
+4. Tap the screen to take a photo
+5. Photos are saved in `Pictures` folder
+
+> ⚠️ Requires Android 9+ (API 28+)
+
+---
+
+## 📦 Build from Source
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/andvipgroup/VCamera.git
+   cd VCamera
