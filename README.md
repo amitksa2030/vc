@@ -25,8 +25,7 @@ If "isPathReallyExist = 0" means it running in a real device.
 
 
 # Demo Video
-[![Watch the video](https://img.youtube.com/vi/lT-MP9c7SbY/maxresdefault.jpg)](https://www.youtube.com/embed/lT-MP9c7SbY)
-
+[![Watch the video](https://img.youtube.com/vi/lT-MP9c7SbY/maxresdefault.jpg)](https://www.youtube.com/embed/lT-MP9c7https://www.youtube.com/embed/lT-MP9c7SbY
 
 # Key Features
 **1. Support replacing the camera with a photo.**  
